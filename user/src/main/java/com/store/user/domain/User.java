@@ -34,9 +34,4 @@ public class User {
 
     @Column(nullable = false)
     private String role;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "company_id")
-    @JsonBackReference
-    private Company company;
 }

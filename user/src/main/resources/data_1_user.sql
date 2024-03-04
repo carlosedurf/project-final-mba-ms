@@ -1,0 +1,2 @@
+INSERT INTO usuario (name, username, email, password, role) VALUES ('Carlos Eduardo Vendedor', 'cerfv', 'carloseduardo.rocha.f@gmail.com', '123456', '1');
+INSERT INTO usuario (name, username, email, password, role) VALUES ('Carlos Eduardo Cliente', 'cerfc', 'carlos.efreitas@al.infnet.edu.br', '123456', '1');

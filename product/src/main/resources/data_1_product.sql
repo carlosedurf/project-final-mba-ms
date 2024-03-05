@@ -1,0 +1,2 @@
+INSERT INTO "product" (title, description, quantity, price, category) VALUES ('PS5', 'video game', 7, 3999.99, 'games');
+INSERT INTO "product" (title, description, quantity, price, category) VALUES ('Blusa do Flamengo', 'Blusa oficial do mengão', 51, 487.54, 'esportes');

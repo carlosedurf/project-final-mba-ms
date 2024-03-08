@@ -46,7 +46,7 @@ public class ShoppingServiceImplement extends GenericServiceImplement<Shopping, 
     public void save(Shopping shopping) {
 
         this.webClient.get()
-                .uri("/user/" + String.valueOf(shopping.getUser_id()))
+                .uri("/product/" + String.valueOf(shopping.getUser_id()))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchangeToMono(response -> {
                     if (response.statusCode().equals(HttpStatus.OK)) {

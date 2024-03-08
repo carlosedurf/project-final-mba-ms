@@ -7,14 +7,14 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "`order_item`")
+@Table(name = "`shopping_item`")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of="id")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class OrderItem {
+public class ShoppingItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +23,7 @@ public class OrderItem {
     private Long product_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "shopping_id")
     @JsonBackReference
-    private Order order;
+    private Shopping shopping;
 }

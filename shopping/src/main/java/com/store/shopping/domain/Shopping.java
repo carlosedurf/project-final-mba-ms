@@ -13,13 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "`order`")
+@Table(name = "`shopping`")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Order {
+public class Shopping {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,8 +33,8 @@ public class Order {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<OrderItem> orderItems = new HashSet<>();
+    @OneToMany(mappedBy = "shopping", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ShoppingItem> shoppingItems = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {

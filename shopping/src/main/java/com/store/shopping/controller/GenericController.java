@@ -1,5 +1,7 @@
 package com.store.shopping.controller;
 
+import com.store.shopping.domain.Shopping;
+import com.store.shopping.domain.ShoppingItem;
 import com.store.shopping.service.GenericService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class GenericController<T> {
-    private final GenericService<T> service;
+    protected final GenericService<T> service;
 
     @GetMapping
     public ResponseEntity<List<T>> getAll() {
@@ -42,4 +44,27 @@ public class GenericController<T> {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/item")
+    public ResponseEntity<Void> addItem(@PathVariable Long id, @RequestBody ShoppingItem item) {
+        service.addItem(id, item);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/item/{id}")
+    public ResponseEntity<Void> addItem(@PathVariable Long id) {
+        service.removeItem(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/send-payment/{id}")
+    public ResponseEntity<Void> sendPayment(@PathVariable Long id) {
+        service.sendPayment(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/success/{id}")
+    public ResponseEntity<Void> success(@PathVariable Long id) {
+        service.success(id);
+        return ResponseEntity.ok().build();
+    }
 }

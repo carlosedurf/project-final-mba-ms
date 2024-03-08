@@ -6,6 +6,6 @@ import io.swagger.v3.oas.annotations.info.License;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "Notification Documentation", description = "Micro service Notification", version = "v1", license = @License(name = "MIT", url = "http://localhost")))
+@OpenAPIDefinition(info = @Info(title = "Payment Documentation", description = "Micro service Payment", version = "v1", license = @License(name = "MIT", url = "http://localhost")))
 public class SwaggerConfig {
 }

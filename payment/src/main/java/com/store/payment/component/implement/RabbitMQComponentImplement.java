@@ -1,7 +1,8 @@
 package com.store.payment.component.implement;
 
 import com.store.payment.component.RabbitMQComponent;
-import com.store.payment.service.implement.EmailServiceImplement;
+import com.store.payment.domain.Payment;
+import com.store.payment.service.implement.PaymentServiceImplement;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +17,7 @@ public class RabbitMQComponentImplement implements RabbitMQComponent {
     private String queue;
 
     @Autowired
-    private EmailServiceImplement emailServiceImplement;
+    private PaymentServiceImplement paymentServiceImplement;
 
     private final WebClient webClient;
 
@@ -24,16 +25,20 @@ public class RabbitMQComponentImplement implements RabbitMQComponent {
         this.webClient = webClient;
     }
 
-    @RabbitListener(queues = "order_notification")
+    public String sendPayment() {
+        System.out.println("Realiza integração com ferramenta externa");
+        return "RETORNA_HASH_DA_INTEGRACAO";
+    }
+
+    @RabbitListener(queues = "payment_notification")
     public void handleMessage(String message) {
         if (message.isEmpty()) {
             return;
         }
 
-        Map<String, Object> obj = emailServiceImplement.convertToObject(message);
+        Map<String, Object> obj = paymentServiceImplement.convertToObject(message);
 
         int user_id = (int) obj.get("user_id");
-        String productName = (String) obj.get("product_name");
 
         String response = this.webClient.get()
                         .uri("/user/" + String.valueOf(user_id))
@@ -41,9 +46,22 @@ public class RabbitMQComponentImplement implements RabbitMQComponent {
                         .bodyToMono(String.class)
                         .block();
 
-        Map<String, Object> user = emailServiceImplement.convertToObject(response);
-        String content = emailServiceImplement.constructOrderContent(productName, (String) user.get("username"));
-        emailServiceImplement.sendEmail(content, (String) user.get("email"), "Notificação teste");
+        String hashIntegration = this.sendPayment();
+        Payment payment = new Payment();
+        payment.setHashTransaction(hashIntegration);
+
+        this.paymentServiceImplement.save(payment);
+
+        Map<String, Object> user = paymentServiceImplement.convertToObject(response);
+        String content = paymentServiceImplement.constructOrderContent((String) user.get("username"));
+        paymentServiceImplement.sendEmail(content, (String) obj.get("email"), "Sucesso no pagamento");
+
+        this.webClient.post()
+                .uri("http://localhost:8086/api/shopping/success/" + String.valueOf(obj.get("id")))
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
         System.out.println("Mensagem enviada com sucesso!");
     }
 }

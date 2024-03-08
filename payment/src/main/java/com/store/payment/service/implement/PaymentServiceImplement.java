@@ -2,10 +2,13 @@ package com.store.payment.service.implement;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.store.payment.domain.Payment;
+import com.store.payment.repository.PaymentRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -13,12 +16,15 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class EmailServiceImplement extends GenericServiceImplement {
+public class PaymentServiceImplement extends GenericServiceImplement {
     @Autowired
     private JavaMailSender mailSender;
 
     @Value("${spring.mail_from}")
     private String mailFrom;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     public Map<String, Object> convertToObject(String jsonS) {
         try {
@@ -30,8 +36,8 @@ public class EmailServiceImplement extends GenericServiceImplement {
         }
     }
 
-    public String constructOrderContent(String productName, String username) {
-        return "<html><body><h1>Olá " + username + "</h1><p>Você acaba de comprar o produto " + productName + "</p></body></html>";
+    public String constructOrderContent(String username) {
+        return "<html><body><h1>Olá " + username + "</h1><p>Você acaba de realizar o pagamento via PAY TEST </p></body></html>";
     }
 
     public void sendEmail(String content, String email, String subject) {
@@ -40,6 +46,7 @@ public class EmailServiceImplement extends GenericServiceImplement {
 //        message.setTo(email);
 //        message.setSubject(subject);
 //        message.setText(content);
+//        mailSender.send(message);
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -53,5 +60,9 @@ public class EmailServiceImplement extends GenericServiceImplement {
         } catch (MessagingException e) {
             System.out.println(e);
         }
+    }
+
+    public void save(Payment payment) {
+        paymentRepository.save(payment);
     }
 }
